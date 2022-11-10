@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.renren.modules.mohe_test_case.dao.TestCaseDao">
+    <select id="queryAll" parameterType="io.renren.modules.mohe_test_case.entity.TestCaseEntity"
+            resultType="io.renren.modules.mohe_test_case.entity.TestCaseEntity">
+        select id, caseId, caseName, application, precondition, subordinate, param,steps,expectResult,caseLevel,
+        api,executeType,isDelete,author,createTime,updateTime,isSmokeCase
+        from test_case
+        <where>
+            <if test="id!=null">
+                and id=#{id}
+            </if>
+            <if test="caseId!=null and caseId!=''">
+                and caseId=#{caseId}
+            </if>
+            <if test="caseName!=null and caseName!=''">
+                and caseName=#{caseName}
+            </if>
+            <if test="application!=null and application!=''">
+                and application=#{application}
+            </if>
+            <if test="expectResult!=null and expectResult!=''">
+                and expectResult=#{expectResult}
+            </if>
+            <if test="caseLevel!=null and caseLevel!=''">
+                and caseLevel=#{caseLevel}
+            </if>
+            <if test="executeType!=null and executeType!=''">
+                and executeType=#{executeType}
+            </if>
+            <if test="isDelete!=null and isDelete!='' and isDelete!=1">
+                and isDelete=#{isDelete}
+            </if>
+        </where>
+        order by updateTime desc
+    </select>
+    <insert id="addCase" parameterType="io.renren.modules.mohe_test_case.entity.TestCaseEntity">
+        insert into test_case
+        (caseId, caseName,
+        application, precondition, subordinate,
+        param, steps,expectResult,caseLevel,api,executeType,author,createTime,updateTime,isSmokeCase)
+        values (#{caseId}, #{caseName},
+        #{application}, #{precondition}, #{subordinate},
+        #{param},#{steps},#{expectResult},#{caseLevel},#{api},#{executeType},#{author},now(),now(),#{isSmokeCase})
+    </insert>
+
+    <update id="updateByCaseId" parameterType="io.renren.modules.mohe_test_case.entity.TestCaseEntity">
+        update test_case
+        <set>
+            <if test="caseName != null and caseName!=''">
+                caseName = #{caseName},
+            </if>
+            <if test="application != null and application!=''">
+                application = #{application},
+            </if>
+
+            <if test="expectResult != null and expectResult!=''">
+                expectResult = #{expectResult},
+            </if>
+            <if test="caseLevel != null and caseLevel!=''">
+                caseLevel = #{caseLevel},
+            </if>
+            <if test="executeType != null and executeType!=''">
+                executeType = #{executeType},
+            </if>
+            updateTime = now(),
+            precondition = #{precondition},
+            subordinate =#{subordinate},
+            param=#{param},
+            steps=#{steps},
+            author=#{author},
+            api = #{api},
+            isSmokeCase = #{isSmokeCase}
+        </set>
+        where caseId = #{caseId}
+    </update>
+    <delete id="deleteByCaseId" >
+        delete from test_case
+        where caseId=#{caseId}
+    </delete>
+    <select id="queryByCaseId" resultType="io.renren.modules.mohe_test_case.entity.TestCaseEntity">
+        select id, caseId, caseName, application, precondition, subordinate, param,steps,expectResult,caseLevel,
+        api,executeType,isDelete,author,createTime,updateTime,isSmokeCase
+        FROM test_case
+        <where>
+            <if test="id!=null and id!=''">
+                and id = #{id}
+            </if>
+            <if test="caseId!=null and caseId!=''">
+                and caseId like CONCAT('%',#{caseId},'%' )
+            </if>
+        </where>
+    </select>
+
+    <select id="count" parameterType="io.renren.modules.mohe_test_case.entity.TestCaseEntity" resultType="int">
+        SELECT COUNT(application)
+        FROM test_case
+        WHERE application=#{application}
+    </select>
+
+    <select id="queryByDetail" resultType="io.renren.modules.mohe_test_case.entity.TestCaseEntity">
+      SELECT id, caseId, caseName, application, precondition, subordinate, param,steps,expectResult,caseLevel,
+        api,executeType,isDelete,author,createTime,updateTime,isSmokeCase
+        FROM test_case
+        <where>
+            <if test="author!=null and author!=''">
+                and author=#{author}
+            </if>
+            <if test="caseLevel!=null and caseLevel!=''">
+                and caseLevel=#{caseLevel}
+            </if>
+            <if test="isSmokeCase!=null and isSmokeCase!=''">
+                and isSmokeCase=#{isSmokeCase}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.renren.modules.mohe_test_case.dao.CaseActionDao">
+<!--    <select id="queryAll" parameterType="cn.fraudmetrix.octopus.modules.mohe_test_case.entity.CaseActionEntity"-->
+<!--            resultType="cn.fraudmetrix.octopus.modules.mohe_test_case.entity.CaseActionEntity">-->
+<!--        select-->
+<!--        id,-->
+<!--        caseId,-->
+<!--        version,-->
+<!--        actualResult,-->
+<!--        expectResult,-->
+<!--        actionCount,-->
+<!--        actor,-->
+<!--        isDelete,-->
+<!--        lastDate-->
+<!--        from case_action-->
+<!--        <where>-->
+<!--            <if test="isDelete!=null and isDelete!='' and isDelete!=1">-->
+<!--                and isDelete=#{isDelete}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--        order by lastDate desc-->
+<!--    </select>-->
+    <insert id="addAction" parameterType="io.renren.modules.mohe_test_case.entity.CaseActionEntity">
+        insert into case_action
+        (version,
+        caseId,
+        actualResult,
+        expectResult,
+        actionCount,
+        actor,
+        lastDate)
+        values (
+        #{version},
+        #{caseId},
+        #{actualResult},
+        #{expectResult},
+        #{actionCount},
+        #{actor},
+        now())
+    </insert>
+
+    <!--<update id="updateByVersion" parameterType="cn.fraudmetrix.octopus.modules.mohe_test_case.entity.CaseVersionEntity">-->
+        <!--update case_version-->
+        <!--<set>-->
+            <!--<if test="version != null and version!=''">-->
+                <!--version = #{version},-->
+            <!--</if>-->
+            <!--<if test="application != null and application!=''">-->
+                <!--application = #{application},-->
+            <!--</if>-->
+            <!--<if test="isPassStatus != null and isPassStatus!=''">-->
+                <!--isPassStatus = #{isPassStatus},-->
+            <!--</if>-->
+            <!--<if test="isReviewPass != null and isReviewPass!=''">-->
+                <!--isReviewPass = #{isReviewPass},-->
+            <!--</if>-->
+            <!--updateTime = now(),-->
+            <!--author=#{author}-->
+        <!--</set>-->
+        <!--where version = #{version}-->
+    <!--</update>-->
+<!--    <delete id="deleteByVersion" >-->
+<!--        delete from case_action-->
+<!--        where version=#{version}-->
+<!--    </delete>-->
+    <select id="queryByVersion" resultType="io.renren.modules.mohe_test_case.entity.CaseActionEntity">
+        select id,
+        caseId,
+        version,
+        author,
+        actualResult,
+        expectResult,
+        actionCount,
+        isDelete,
+        lastDate
+        FROM case_action
+        <where>
+            <if test="id!=null and id!=''">
+                and id = #{id}
+            </if>
+            <if test="version!=null and version!=''">
+                and version like CONCAT('%',#{version},'%' )
+            </if>
+        </where>
+    </select>
+
+<!--    <select id="count" parameterType="cn.fraudmetrix.octopus.modules.mohe_test_case.entity.CaseActionEntity" resultType="int">-->
+<!--        SELECT COUNT(version)-->
+<!--        FROM case_action-->
+<!--        WHERE version=#{version}-->
+<!--    </select>-->
+
+
+</mapper>

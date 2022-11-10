@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.renren.modules.mohe_test_case.dao.CaseVersionDao">
+    <select id="queryAll" parameterType="io.renren.modules.mohe_test_case.entity.CaseVersionEntity"
+            resultType="io.renren.modules.mohe_test_case.entity.CaseVersionEntity">
+        select
+        id,
+        version,
+        author,
+        application,
+        isPassStatus,
+        caseCount,
+        isReviewPass,
+        isDelete,
+        createTime,
+        updateTime
+        from case_version
+        <where>
+            <if test="isDelete!=null and isDelete!='' and isDelete!=1">
+                and isDelete=#{isDelete}
+            </if>
+        </where>
+        order by updateTime desc
+    </select>
+    <insert id="addVersion" parameterType="io.renren.modules.mohe_test_case.entity.CaseVersionEntity">
+        insert into case_version
+        (version,
+        author,
+        application,
+        createTime,
+        updateTime)
+        values (
+        #{version},
+        #{author},
+        #{application},
+        now(),
+        now())
+    </insert>
+
+    <update id="updateByVersion" parameterType="io.renren.modules.mohe_test_case.entity.CaseVersionEntity">
+        update case_version
+        <set>
+            <if test="version != null and version!=''">
+                version = #{version},
+            </if>
+            <if test="application != null and application!=''">
+                application = #{application},
+            </if>
+            <if test="isPassStatus != null and isPassStatus!=''">
+                isPassStatus = #{isPassStatus},
+            </if>
+            <if test="isReviewPass != null and isReviewPass!=''">
+                isReviewPass = #{isReviewPass},
+            </if>
+            updateTime = now(),
+            author=#{author}
+        </set>
+        where version = #{version}
+    </update>
+<!--    <delete id="deleteByVersion" >-->
+<!--        delete from case_version-->
+<!--        where version=#{version}-->
+<!--    </delete>-->
+    <select id="queryByVersion" resultType="io.renren.modules.mohe_test_case.entity.CaseVersionEntity">
+        select id,
+        version,
+        author,
+        application,
+        isPassStatus,
+        caseCount,
+        isReviewPass,
+        isDelete,
+        createTime,
+        updateTime
+        FROM case_version
+        <where>
+            <if test="id!=null and id!=''">
+                and id = #{id}
+            </if>
+            <if test="version!=null and version!=''">
+                and version like CONCAT('%',#{version},'%' )
+            </if>
+        </where>
+    </select>
+
+    <select id="count" parameterType="io.renren.modules.mohe_test_case.entity.CaseVersionEntity" resultType="int">
+        SELECT COUNT(application)
+        FROM case_version
+        WHERE application=#{application}
+    </select>
+
+
+</mapper>
